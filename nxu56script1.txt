@@ -1,0 +1,19 @@
+GRANT USAGE ON *.* TO 'ta'@'localhost';
+DROP USER 'ta'@'localhost';
+CREATE USER 'ta'@'localhost' IDENTIFIED BY 'cs3319';
+GRANT ALL PRIVILEGES ON nxu56assign2db.* TO 'ta'@'localhost';
+FLUSH PRIVILEGES;
+
+SHOW DATABASES;
+DROP DATABASE IF EXISTS nxu56assign2db;
+CREATE DATABASE nxu56assign2db;
+USE nxu56assign2db;
+SHOW TABLES;
+
+CREATE TABLE product (productid char(2), Description varchar(20), costperiteam float, quantity int, PRIMARY KEY (productid));
+CREATE TABLE agent (agentid char(2), firstname varchar(30), lastname varchar(30), city varchar(15),commissionpercentage int,PRIMARY KEY (agentid));
+CREATE TABLE customer (customerid char(2), firstname varchar(30), lastname varchar(30),city varchar(15), phonenum varchar(20),
+agentid char(2), PRIMARY KEY (customerid), FOREIGN KEY (agentid) REFERENCES agent(agentid));
+CREATE TABLE buyproduct (customerid char(2), productid char(2), purchaseditem int, PRIMARY KEY(customerid,productid),
+FOREIGN KEY(customerid) REFERENCES customer(customerid), FOREIGN KEY(productid) REFERENCES product(productid));
+

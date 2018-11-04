@@ -1,0 +1,52 @@
+GRANT USAGE ON *.* TO 'ta'@'localhost';
+DROP USER 'ta'@'localhost';
+CREATE USER 'ta'@'localhost' IDENTIFIED BY 'cs3319';
+GRANT ALL PRIVILEGES ON nxu56assign2db.* TO 'ta'@'localhost';
+FLUSH PRIVILEGES;
+
+USE nxu56assign2db;
+
+--  Query 1
+SELECT Description FROM product;
+
+-- Query 2
+SELECT DISTINCT city FROM customer;
+
+-- Query 3
+SELECT * FROM agent ORDER BY city;
+
+-- Query 4
+SELECT firstname,lastname FROM customer WHERE city="Springfield";
+
+-- Query 5
+SELECT customer.lastname FROM customer,agent WHERE agent.firstname="Regis" and customer.agentid = agent.agentid;
+
+-- Query 6
+SELECT Description FROM product WHERE Description LIKE '%pad%' OR Description LIKE '%Pad%';
+
+-- Query 7
+SELECT c.lastname, p.Description, b.purchaseditem FROM customer AS c, product AS p, buyproduct AS b WHERE b.customerid = c.customerid;
+
+-- Query 8
+SELECT SUM(b.purchaseditem) AS "Homer's Total Purchases" FROM buyproduct AS b, customer AS c WHERE c.firstname="Homer" and b.customerid=c.customerid;
+
+-- Query 9
+SELECT c.firstname, c.lastname, SUM(b.purchaseditem) FROM buyproduct AS b, customer AS c WHERE c.customerid = b.customerid GROUP BY c.customerid;
+
+-- Query 10
+SELECT p.Description, p.quantity FROM product AS p WHERE p.productid NOT IN (SELECT productid FROM buyproduct);
+
+-- Query 11
+SELECT p.Description, p.quantity FROM product AS p WHERE p.productid NOT IN (SELECT b.productid FROM buyproduct AS b, customer AS c WHERE c.firstname="Fred" and c.lastname="Flintstone");
+
+-- Query 12
+SELECT a.firstname, a.lastname, c.firstname, c.lastname FROM agent AS a, customer AS c WHERE a.city=c.city;
+
+-- Query 13
+SELECT SUM(b.purchaseditem) AS "Total num of purchased knee pads" FROM buyproduct AS b, product as p WHERE p.Description="Knee Pads";
+
+-- Query 14
+SELECT p.Description FROM product AS p WHERE ( SELECT COUNT(b.customerid) > 3 FROM buyproduct AS b,customer AS c WHERE b.customerid = c.customerid );
+
+-- Query 15
+SELECT DISTINCT a.firstname, a.lastname FROM agent AS a, product AS p,buyproduct AS b, customer AS c WHERE p.Description="Knee Pads" AND p.productid = b.productid AND c.agentid=a.agentid; 

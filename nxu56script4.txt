@@ -1,0 +1,26 @@
+GRANT USAGE ON *.* TO 'ta'@'localhost';
+DROP USER 'ta'@'localhost';
+CREATE USER 'ta'@'localhost' IDENTIFIED BY 'cs3319';
+GRANT ALL PRIVILEGES ON nxu56assign2db.* TO 'ta'@'localhost';
+FLUSH PRIVILEGES;
+
+USE nxu56assign2db;
+
+SELECT * FROM product;
+SELECT * FROM agent;
+SELECT * FROM customer;
+SELECT * FROM buyproduct;
+
+CREATE VIEW cfldp AS SELECT c.firstname, c.lastname, p.Description,b.purchaseditem,p.costperiteam
+, b.purchaseditem * p.costperiteam AS "total cost" FROM customer AS c, buyproduct AS b, product AS p WHERE c.customerid and b.customerid;
+
+SELECT * FROM cfldp;
+
+SELECT * FROM cfldp WHERE purchaseditem * costperiteam > 100;
+
+DELETE FROM product WHERE Description = "Rocket";
+SELECT * FROM product WHERE Description = "Rocket";
+
+DELETE FROM agent WHERE city= "Springfield";
+-- the rows for agetns come from Springfield were not deleted
+-- because there is foreign key constrains existing in the customer table

@@ -1,0 +1,218 @@
+--------------
+GRANT USAGE ON *.* TO 'ta'@'localhost'
+--------------
+
+--------------
+DROP USER 'ta'@'localhost'
+--------------
+
+--------------
+CREATE USER 'ta'@'localhost' IDENTIFIED BY 'cs3319'
+--------------
+
+--------------
+GRANT ALL PRIVILEGES ON nxu56assign2db.* TO 'ta'@'localhost'
+--------------
+
+--------------
+FLUSH PRIVILEGES
+--------------
+
+--------------
+SELECT Description FROM product
+--------------
+
+Description
+Bike
+Socks
+Rocket
+Elbow pads
+Knee Pads
+Roller Blades
+Helmet
+--------------
+SELECT DISTINCT city FROM customer
+--------------
+
+city
+Boston
+Springfield
+Kypto
+Providence
+--------------
+SELECT * FROM agent ORDER BY city
+--------------
+
+agentid	firstname	lastname	city	commissionpercentage
+10	Ning	Xu	Baotou	100
+33	David	Letterman	Bedrock	100
+11	Regis	Philbin	Boston	33
+22	Courtney	Cox	New York	25
+12	Rosie	Cox	Ottawa	50
+66	Rosie	ODonnell	Ottawa	100
+99	Hugh	Grant	Springfield	16
+--------------
+SELECT firstname,lastname FROM customer WHERE city="Springfield"
+--------------
+
+firstname	lastname
+Monty	Burns
+Homer	Simpson
+Sideshow	Bob
+--------------
+SELECT customer.lastname FROM customer,agent WHERE agent.firstname="Regis" and customer.agentid = agent.agentid
+--------------
+
+lastname
+Rubble
+Flintstone
+--------------
+SELECT Description FROM product WHERE Description LIKE '%pad%' OR Description LIKE '%Pad%'
+--------------
+
+Description
+Elbow pads
+Knee Pads
+--------------
+SELECT c.lastname, p.Description, b.purchaseditem FROM customer AS c, product AS p, buyproduct AS b WHERE b.customerid = c.customerid
+--------------
+
+lastname	Description	purchaseditem
+Griffens	Bike	19
+Flintstone	Bike	2
+Flintstone	Bike	2
+Simpson	Bike	14
+Simpson	Bike	10
+Simpson	Bike	20
+Bob	Bike	5
+Bob	Bike	5
+Bob	Bike	5
+Bob	Bike	5
+Griffens	Socks	19
+Flintstone	Socks	2
+Flintstone	Socks	2
+Simpson	Socks	14
+Simpson	Socks	10
+Simpson	Socks	20
+Bob	Socks	5
+Bob	Socks	5
+Bob	Socks	5
+Bob	Socks	5
+Griffens	Rocket	19
+Flintstone	Rocket	2
+Flintstone	Rocket	2
+Simpson	Rocket	14
+Simpson	Rocket	10
+Simpson	Rocket	20
+Bob	Rocket	5
+Bob	Rocket	5
+Bob	Rocket	5
+Bob	Rocket	5
+Griffens	Elbow pads	19
+Flintstone	Elbow pads	2
+Flintstone	Elbow pads	2
+Simpson	Elbow pads	14
+Simpson	Elbow pads	10
+Simpson	Elbow pads	20
+Bob	Elbow pads	5
+Bob	Elbow pads	5
+Bob	Elbow pads	5
+Bob	Elbow pads	5
+Griffens	Knee Pads	19
+Flintstone	Knee Pads	2
+Flintstone	Knee Pads	2
+Simpson	Knee Pads	14
+Simpson	Knee Pads	10
+Simpson	Knee Pads	20
+Bob	Knee Pads	5
+Bob	Knee Pads	5
+Bob	Knee Pads	5
+Bob	Knee Pads	5
+Griffens	Roller Blades	19
+Flintstone	Roller Blades	2
+Flintstone	Roller Blades	2
+Simpson	Roller Blades	14
+Simpson	Roller Blades	10
+Simpson	Roller Blades	20
+Bob	Roller Blades	5
+Bob	Roller Blades	5
+Bob	Roller Blades	5
+Bob	Roller Blades	5
+Griffens	Helmet	19
+Flintstone	Helmet	2
+Flintstone	Helmet	2
+Simpson	Helmet	14
+Simpson	Helmet	10
+Simpson	Helmet	20
+Bob	Helmet	5
+Bob	Helmet	5
+Bob	Helmet	5
+Bob	Helmet	5
+--------------
+SELECT SUM(b.purchaseditem) AS "Homer's Total Purchases" FROM buyproduct AS b, customer AS c WHERE c.firstname="Homer" and b.customerid=c.customerid
+--------------
+
+Homer's Total Purchases
+44
+--------------
+SELECT c.firstname, c.lastname, SUM(b.purchaseditem) FROM buyproduct AS b, customer AS c WHERE c.customerid = b.customerid GROUP BY c.customerid
+--------------
+
+firstname	lastname	SUM(b.purchaseditem)
+Peter	Griffens	19
+Fred	Flintstone	4
+Homer	Simpson	44
+Sideshow	Bob	20
+--------------
+SELECT p.Description, p.quantity FROM product AS p WHERE p.productid NOT IN (SELECT productid FROM buyproduct)
+--------------
+
+Description	quantity
+Bike	200
+Rocket	100
+Roller Blades	89
+--------------
+SELECT p.Description, p.quantity FROM product AS p WHERE p.productid NOT IN (SELECT b.productid FROM buyproduct AS b, customer AS c WHERE c.firstname="Fred" and c.lastname="Flintstone")
+--------------
+
+Description	quantity
+Bike	200
+Rocket	100
+Roller Blades	89
+--------------
+SELECT a.firstname, a.lastname, c.firstname, c.lastname FROM agent AS a, customer AS c WHERE a.city=c.city
+--------------
+
+firstname	lastname	firstname	lastname
+Regis	Philbin	Barney	Rubble
+Hugh	Grant	Monty	Burns
+Regis	Philbin	Fred	Flintstone
+Hugh	Grant	Homer	Simpson
+Hugh	Grant	Sideshow	Bob
+--------------
+SELECT SUM(b.purchaseditem) AS "Total num of purchased knee pads" FROM buyproduct AS b, product as p WHERE p.Description="Knee Pads"
+--------------
+
+Total num of purchased knee pads
+87
+--------------
+SELECT p.Description FROM product AS p WHERE ( SELECT COUNT(b.customerid) > 3 FROM buyproduct AS b,customer AS c WHERE b.customerid = c.customerid )
+--------------
+
+Description
+Bike
+Socks
+Rocket
+Elbow pads
+Knee Pads
+Roller Blades
+Helmet
+--------------
+SELECT DISTINCT a.firstname, a.lastname FROM agent AS a, product AS p,buyproduct AS b, customer AS c WHERE p.Description="Knee Pads" AND p.productid = b.productid AND c.agentid=a.agentid
+--------------
+
+firstname	lastname
+Regis	Philbin
+Rosie	Cox
+David	Letterman
+Hugh	Grant
